@@ -1,5 +1,16 @@
+import { z } from "zod";
 import type { SupabaseClient } from "../db/supabase.client";
 import type { SuggestedFlashcardsDto, SuggestedFlashcard } from "../types";
+import {
+  OpenRouterService,
+  AuthenticationError,
+  RateLimitError,
+  BadRequestError,
+  ValidationError,
+  NetworkError,
+  ApiError,
+  ConfigurationError,
+} from "./openrouterService";
 
 /**
  * Custom error class for deck not found or unauthorized access errors.
@@ -22,8 +33,27 @@ export class GenerationError extends Error {
 }
 
 /**
- * Generates flashcard suggestions from provided text.
- * This function verifies deck ownership, generates mock flashcards,
+ * Zod schema for a single flashcard suggestion from the AI.
+ */
+const flashcardSchema = z.object({
+  front: z.string().describe("The question or term on the front of the flashcard."),
+  back: z.string().describe("The answer or definition on the back of the flashcard."),
+});
+
+/**
+ * Zod schema for the AI response containing an array of flashcard suggestions.
+ */
+const flashcardsResponseSchema = z.object({
+  flashcards: z
+    .array(flashcardSchema)
+    .min(1)
+    .max(20)
+    .describe("An array of 3-10 flashcard suggestions based on the provided text."),
+});
+
+/**
+ * Generates flashcard suggestions from provided text using OpenRouter AI.
+ * This function verifies deck ownership, generates flashcards using AI,
  * and logs the generation event to the database.
  *
  * @param deckId - The UUID of the deck to generate flashcards for
@@ -51,26 +81,89 @@ export async function generateFlashcards(
     throw new DeckNotFoundError("You do not have access to this deck");
   }
 
-  // Step 2: Generate flashcards (mock implementation)
+  // Step 2: Generate flashcards using OpenRouter AI
   const startTime = performance.now();
+  let suggestedFlashcards: SuggestedFlashcard[];
 
-  // Mock flashcard generation - simulating AI processing time
-  await new Promise((resolve) => setTimeout(resolve, 100));
+  try {
+    const openRouterService = new OpenRouterService();
 
-  const suggestedFlashcards: SuggestedFlashcard[] = [
-    {
-      front: "What is the powerhouse of the cell?",
-      back: "The mitochondria.",
-    },
-    {
-      front: "What is the process by which plants make their own food?",
-      back: "Photosynthesis.",
-    },
-    {
-      front: "What is the largest organ in the human body?",
-      back: "The skin.",
-    },
-  ];
+    const systemMessage = `You are an expert educational content creator specializing in creating effective flashcards for studying.
+
+Your task is to analyze the provided text and generate 3-10 high-quality flashcard pairs that:
+- Cover the most important concepts, facts, or definitions from the text
+- Use clear, concise language
+- Have questions that test understanding, not just memorization
+- Include complete, informative answers
+- Are ordered from basic to more advanced concepts when possible
+
+Generate between 3 and 10 flashcards depending on the amount and complexity of content in the provided text.`;
+
+    const userMessage = `Create flashcards from the following text:\n\n${text}`;
+
+    const response = await openRouterService.getChatCompletion({
+      model: "openai/gpt-oss-20b:free",
+      systemMessage,
+      userMessage,
+      responseSchema: flashcardsResponseSchema,
+      temperature: 0.7,
+      max_tokens: 2000,
+    });
+
+    suggestedFlashcards = response.flashcards;
+
+    // Validate that we got at least one flashcard
+    if (!suggestedFlashcards || suggestedFlashcards.length === 0) {
+      throw new GenerationError("AI did not generate any flashcards. Please try again with different text.");
+    }
+  } catch (error) {
+    // Handle OpenRouter-specific errors
+    if (error instanceof ConfigurationError) {
+      // eslint-disable-next-line no-console
+      console.error("OpenRouter configuration error:", error);
+      throw new GenerationError("Service configuration error. Please contact support.");
+    }
+
+    if (error instanceof AuthenticationError) {
+      // eslint-disable-next-line no-console
+      console.error("OpenRouter authentication error:", error);
+      throw new GenerationError("AI service authentication failed. Please contact support.");
+    }
+
+    if (error instanceof RateLimitError) {
+      // eslint-disable-next-line no-console
+      console.error("OpenRouter rate limit exceeded:", error);
+      throw new GenerationError("AI service rate limit exceeded. Please try again in a few moments.");
+    }
+
+    if (error instanceof NetworkError) {
+      // eslint-disable-next-line no-console
+      console.error("Network error calling OpenRouter:", error);
+      throw new GenerationError("Network error connecting to AI service. Please check your connection and try again.");
+    }
+
+    if (error instanceof ValidationError) {
+      // eslint-disable-next-line no-console
+      console.error("AI response validation error:", error);
+      throw new GenerationError("AI returned an unexpected response format. Please try again.");
+    }
+
+    if (error instanceof BadRequestError || error instanceof ApiError) {
+      // eslint-disable-next-line no-console
+      console.error("OpenRouter API error:", error);
+      throw new GenerationError("AI service error. Please try again.");
+    }
+
+    // If it's already our custom error, rethrow it
+    if (error instanceof GenerationError) {
+      throw error;
+    }
+
+    // Log unexpected errors
+    // eslint-disable-next-line no-console
+    console.error("Unexpected error during flashcard generation:", error);
+    throw new GenerationError("An unexpected error occurred during generation. Please try again.");
+  }
 
   const endTime = performance.now();
   const durationMs = Math.round(endTime - startTime);
@@ -128,10 +221,4 @@ export async function generateFlashcards(
 
     throw new GenerationError("An unexpected error occurred during generation");
   }
-
-  // Step 4: Return mock result (for testing without database)
-  return {
-    generationId: crypto.randomUUID(),
-    suggestedFlashcards,
-  };
 }

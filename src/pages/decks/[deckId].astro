@@ -1,0 +1,59 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { DeckService } from "../../lib/deckService";
+import { FlashcardService } from "../../lib/flashcardService";
+import type { DeckDto, PaginatedResponse, FlashcardDto } from "../../types";
+import { DeckDetailView } from "../../components/deck-detail/DeckDetailView";
+
+export const prerender = false;
+
+const { deckId } = Astro.params;
+
+if (!deckId) {
+  return Astro.redirect("/dashboard");
+}
+
+// Get supabase and user from locals (set by middleware)
+const supabase = Astro.locals.supabase;
+const user = Astro.locals.user;
+
+if (!user) {
+  return Astro.redirect("/");
+}
+
+// Initialize services
+const deckService = new DeckService(supabase, user.id);
+const flashcardService = new FlashcardService(supabase, user.id);
+
+// Fetch initial data
+let initialDeck: DeckDto | null = null;
+let initialFlashcards: PaginatedResponse<FlashcardDto> | null = null;
+let error: string | null = null;
+
+try {
+  // Fetch deck details
+  initialDeck = await deckService.getDeckById(deckId);
+
+  if (!initialDeck) {
+    error = "Deck not found";
+  } else {
+    // Fetch first page of flashcards
+    initialFlashcards = await flashcardService.getFlashcardsByDeck(deckId, {
+      page: 1,
+      pageSize: 20,
+    });
+  }
+} catch (e) {
+  console.error("Error loading deck detail:", e);
+  error = "Failed to load deck details";
+}
+
+// If there's an error or deck not found, redirect to dashboard
+if (error || !initialDeck || !initialFlashcards) {
+  return Astro.redirect("/dashboard");
+}
+---
+
+<Layout title={`${initialDeck.name} - 10xCards`}>
+  <DeckDetailView client:load deckId={deckId} initialDeck={initialDeck} initialFlashcards={initialFlashcards} />
+</Layout>

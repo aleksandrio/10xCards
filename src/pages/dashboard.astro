@@ -1,0 +1,10 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { DashboardView } from "../components/dashboard/DashboardView";
+
+export const prerender = false;
+---
+
+<Layout title="My Decks - 10xCards">
+  <DashboardView client:load />
+</Layout>

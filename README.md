@@ -66,7 +66,11 @@ To set up and run the project on your local machine, follow these steps.
     ```sh
     cp .env.example .env
     ```
-    You will need to populate this file with your own keys for services like Supabase and OpenRouter.ai.
+    You will need to populate this file with your own keys:
+    
+    - **SUPABASE_URL** and **SUPABASE_KEY**: Get these from your [Supabase project settings](https://app.supabase.com/project/_/settings/api)
+    - **OPENROUTER_API_KEY**: Get your API key from [OpenRouter.ai](https://openrouter.ai/keys)
+    - **SITE_URL**: Set to `http://localhost:4321` for local development, or your deployed URL for production
 
 5.  **Run the development server:**
     ```sh
