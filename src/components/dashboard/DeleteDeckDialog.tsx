@@ -58,6 +58,7 @@ export function DeleteDeckDialog({ isOpen, onClose, onConfirm, deck }: DeleteDec
             onClick={handleConfirm}
             disabled={isDeleting}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            data-testid="delete-deck-confirm-button"
           >
             {isDeleting ? "Deleting..." : "Delete"}
           </AlertDialogAction>

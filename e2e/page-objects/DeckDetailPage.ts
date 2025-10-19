@@ -17,6 +17,7 @@ export class DeckDetailPage {
   }
 
   async openGenerationModal() {
+    await this.generateFlashcardsButton.waitFor({ state: "visible" });
     await this.generateFlashcardsButton.click();
     await this.generationModal.waitForModal();
   }

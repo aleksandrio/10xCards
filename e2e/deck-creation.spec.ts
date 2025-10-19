@@ -19,11 +19,13 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe("Deck Creation and Flashcard Generation", () => {
+  let newDeckName: string;
+
   test("should allow a user to create a new deck and generate flashcards", async ({ page }) => {
     // Arrange
     const dashboardPage = new DashboardPage(page);
     const deckDetailPage = new DeckDetailPage(page);
-    const newDeckName = `My New Deck ${Date.now()}`;
+    newDeckName = `My New Deck ${Date.now()}`;
     const generationText =
       "Astro is a web framework for building content-driven websites like blogs, marketing, and e-commerce.";
 
@@ -57,5 +59,27 @@ test.describe("Deck Creation and Flashcard Generation", () => {
     const flashcards = flashcardList.getByTestId("flashcard-list-item");
     const count = await flashcards.count();
     expect(count).toBeGreaterThan(0);
+  });
+
+  test.afterEach(async ({ page }) => {
+    // If the test failed before the deck name was assigned, there's nothing to clean up.
+    if (!newDeckName) {
+      return;
+    }
+
+    const dashboardPage = new DashboardPage(page);
+    await dashboardPage.goto();
+
+    const deckCard = dashboardPage.deckGrid.getDeckCard(newDeckName);
+    const count = await deckCard.count();
+
+    // Check if the deck card exists before trying to delete it.
+    if (count > 0) {
+      await deckCard.getByTestId("deck-card-menu-trigger").click();
+      await page.getByTestId("deck-card-delete-button").click();
+      await page.getByTestId("delete-deck-confirm-button").click();
+      // Wait for the API call to complete to ensure the deck is deleted before the test finishes.
+      await page.waitForResponse((resp) => resp.url().includes("/api/decks") && resp.status() === 200);
+    }
   });
 });

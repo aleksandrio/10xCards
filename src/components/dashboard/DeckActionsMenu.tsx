@@ -29,7 +29,13 @@ export function DeckActionsMenu({ deck, onRename, onDelete }: DeckActionsMenuPro
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-        <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Deck actions">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          aria-label="Deck actions"
+          data-testid="deck-card-menu-trigger"
+        >
           <svg
             className="w-5 h-5"
             fill="none"
@@ -64,7 +70,11 @@ export function DeckActionsMenu({ deck, onRename, onDelete }: DeckActionsMenuPro
           </svg>
           Rename
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleDelete} className="text-destructive focus:text-destructive">
+        <DropdownMenuItem
+          onClick={handleDelete}
+          className="text-destructive focus:text-destructive"
+          data-testid="deck-card-delete-button"
+        >
           <svg
             className="w-4 h-4 mr-2"
             fill="none"
