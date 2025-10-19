@@ -41,7 +41,6 @@ export function ForgotPasswordForm() {
 
       // Placeholder for UI demonstration
       toast.success("Password reset functionality will be implemented in the next phase");
-      console.log("Password reset requested for:", result.data.email);
       setIsSubmitted(true);
     } catch (error) {
       setErrors({
@@ -74,10 +73,10 @@ export function ForgotPasswordForm() {
           </div>
           <h1 className="text-3xl font-bold">Check your email</h1>
           <p className="text-muted-foreground">
-            We've sent a password reset link to <strong>{email}</strong>
+            We&apos;ve sent a password reset link to <strong>{email}</strong>
           </p>
           <p className="text-sm text-muted-foreground pt-2">
-            Didn't receive the email? Check your spam folder or{" "}
+            Didn&apos;t receive the email? Check your spam folder or{" "}
             <button onClick={() => setIsSubmitted(false)} className="text-primary hover:underline" type="button">
               try again
             </button>
@@ -100,7 +99,7 @@ export function ForgotPasswordForm() {
       <div className="space-y-2 text-center">
         <h1 className="text-3xl font-bold">Reset your password</h1>
         <p className="text-muted-foreground">
-          Enter your email address and we'll send you a link to reset your password
+          Enter your email address and we&apos;ll send you a link to reset your password
         </p>
       </div>
 

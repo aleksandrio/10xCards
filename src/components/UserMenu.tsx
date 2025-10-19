@@ -36,6 +36,7 @@ export default function UserMenu({ email }: UserMenuProps) {
       // Redirect to login page after successful logout
       window.location.href = "/login";
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error("Logout error:", error);
       toast.error(error instanceof Error ? error.message : "Failed to log out");
       setIsLoggingOut(false);

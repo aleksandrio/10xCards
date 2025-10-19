@@ -46,6 +46,7 @@ export function UpdatePasswordForm() {
 
       // Placeholder for UI demonstration
       toast.success("Password update functionality will be implemented in the next phase");
+      // eslint-disable-next-line no-console
       console.log("Password update requested");
     } catch (error) {
       setErrors({

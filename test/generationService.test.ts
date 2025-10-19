@@ -1,9 +1,5 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
-import {
-  generateFlashcards,
-  DeckNotFoundError,
-  GenerationError,
-} from "../src/lib/generationService";
+import { generateFlashcards, GenerationError } from "../src/lib/generationService";
 import { OpenRouterService } from "../src/lib/openrouterService";
 import type { SupabaseClient } from "../src/db/supabase.client";
 
@@ -151,7 +147,9 @@ describe("generateFlashcards", () => {
         mockSupabase.single.mockResolvedValueOnce({ data: null, error: new Error("Insert failed") }); // Fail insert generation
 
         // Act & Assert
-        await expect(generateFlashcards(deckId, text, userId, supabase)).rejects.toThrow("Failed to log generation event");
+        await expect(generateFlashcards(deckId, text, userId, supabase)).rejects.toThrow(
+          "Failed to log generation event"
+        );
       });
 
       it("should attempt to log to generation_errors if logging generation fails", async () => {
@@ -160,40 +158,40 @@ describe("generateFlashcards", () => {
         mockSupabase.single.mockResolvedValueOnce({ data: null, error: insertError }); // Fail insert generation
         const mockInsertErrorLog = vi.fn().mockResolvedValue({ error: null });
         const fromMock = vi.fn((table: string) => {
-            if (table === 'generations') {
-                // This is for the failed insert
-                return { 
-                    ...mockSupabase,
-                    select: vi.fn().mockReturnThis(),
-                    single: vi.fn().mockResolvedValueOnce({ data: null, error: insertError })
-                };
-            }
-            if (table === 'generation_errors') {
-                return { insert: mockInsertErrorLog };
-            }
-            if (table === 'decks') {
-                const mockDeck = { id: deckId, user_id: userId };
-                return {
-                    ...mockSupabase,
-                    select: vi.fn().mockReturnThis(),
-                    eq: vi.fn().mockReturnThis(),
-                    single: vi.fn().mockResolvedValueOnce({ data: mockDeck, error: null })
-                }
-            }
-            return mockSupabase; // return the default mock for other tables
+          if (table === "generations") {
+            // This is for the failed insert
+            return {
+              ...mockSupabase,
+              select: vi.fn().mockReturnThis(),
+              single: vi.fn().mockResolvedValueOnce({ data: null, error: insertError }),
+            };
+          }
+          if (table === "generation_errors") {
+            return { insert: mockInsertErrorLog };
+          }
+          if (table === "decks") {
+            const mockDeck = { id: deckId, user_id: userId };
+            return {
+              ...mockSupabase,
+              select: vi.fn().mockReturnThis(),
+              eq: vi.fn().mockReturnThis(),
+              single: vi.fn().mockResolvedValueOnce({ data: mockDeck, error: null }),
+            };
+          }
+          return mockSupabase; // return the default mock for other tables
         });
         const tempSupabase = {
-            ...mockSupabase,
-            from: fromMock,
+          ...mockSupabase,
+          from: fromMock,
         } as unknown as SupabaseClient;
 
         mockGetChatCompletion.mockResolvedValue({ flashcards: mockFlashcards });
 
         // Act & Assert
         await expect(generateFlashcards(deckId, text, userId, tempSupabase)).rejects.toThrow(GenerationError);
-        
+
         // Assert that we tried logging the error
-        expect(fromMock).toHaveBeenCalledWith('generation_errors');
+        expect(fromMock).toHaveBeenCalledWith("generation_errors");
         expect(mockInsertErrorLog).toHaveBeenCalledWith({
           deck_id: deckId,
           user_id: userId,

@@ -51,6 +51,7 @@ export function AddFlashcardModal({ isOpen, onClose, onSubmit }: AddFlashcardMod
       await onSubmit(front, back);
       handleClose();
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error("Error creating flashcard:", error);
       setIsSubmitting(false);
     }

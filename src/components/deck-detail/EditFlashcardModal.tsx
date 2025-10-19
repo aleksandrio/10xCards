@@ -63,6 +63,7 @@ export function EditFlashcardModal({ isOpen, onClose, onSubmit, flashcard }: Edi
       await onSubmit(flashcard.id, front, back);
       handleClose();
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error("Error updating flashcard:", error);
       setIsSubmitting(false);
     }

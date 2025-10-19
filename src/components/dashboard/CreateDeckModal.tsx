@@ -61,7 +61,6 @@ export function CreateDeckModal({ isOpen, onClose, onSubmit }: CreateDeckModalPr
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Enter deck name"
                 maxLength={100}
-                autoFocus
                 disabled={isSubmitting}
                 data-testid="deck-name-input"
               />

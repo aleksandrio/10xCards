@@ -46,7 +46,7 @@ export function DeleteDeckDialog({ isOpen, onClose, onConfirm, deck }: DeleteDec
         <AlertDialogHeader>
           <AlertDialogTitle>Delete Deck</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete "{deck.name}"? This will permanently delete the deck and all{" "}
+            Are you sure you want to delete &quot;{deck.name}&quot;? This will permanently delete the deck and all{" "}
             {deck.flashcardCount} flashcard{deck.flashcardCount === 1 ? "" : "s"} inside it. This action cannot be
             undone.
           </AlertDialogDescription>

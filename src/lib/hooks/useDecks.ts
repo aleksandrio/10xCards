@@ -33,6 +33,7 @@ export function useDecks(): UseDecksReturn {
       setTotalDecks(data.pagination.totalItems);
     } catch (err) {
       setError(err instanceof Error ? err : new Error("Unknown error occurred"));
+      // eslint-disable-next-line no-console
       console.error("Error fetching decks:", err);
     } finally {
       setIsLoading(false);
@@ -64,6 +65,7 @@ export function useDecks(): UseDecksReturn {
         // Re-fetch decks to update the list
         await fetchDecks();
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error("Error creating deck:", err);
         throw err instanceof Error ? err : new Error("Failed to create deck");
       }
@@ -92,6 +94,7 @@ export function useDecks(): UseDecksReturn {
         // Re-fetch decks to update the list
         await fetchDecks();
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error("Error renaming deck:", err);
         throw err instanceof Error ? err : new Error("Failed to rename deck");
       }
@@ -114,6 +117,7 @@ export function useDecks(): UseDecksReturn {
         // Re-fetch decks to update the list
         await fetchDecks();
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error("Error deleting deck:", err);
         throw err instanceof Error ? err : new Error("Failed to delete deck");
       }

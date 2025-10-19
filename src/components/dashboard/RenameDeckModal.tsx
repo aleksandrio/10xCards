@@ -70,7 +70,6 @@ export function RenameDeckModal({ isOpen, onClose, onSubmit, initialData }: Rena
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Enter deck name"
                 maxLength={100}
-                autoFocus
                 disabled={isSubmitting}
               />
               <div className="flex justify-between text-xs text-muted-foreground">

@@ -56,6 +56,7 @@ export function useDeckDetail(
         deck,
       }));
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error("Error refreshing deck:", err);
       throw err instanceof Error ? err : new Error("Failed to refresh deck");
     }
@@ -89,6 +90,7 @@ export function useDeckDetail(
         },
       }));
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error("Error loading more flashcards:", err);
       setViewModel((prev) => ({
         ...prev,
@@ -129,6 +131,7 @@ export function useDeckDetail(
         // Refresh deck to update card count
         await refreshDeck();
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error("Error creating flashcard:", err);
         throw err instanceof Error ? err : new Error("Failed to create flashcard");
       }
@@ -159,6 +162,7 @@ export function useDeckDetail(
         flashcards: prev.flashcards.map((fc) => (fc.id === flashcardId ? updatedFlashcard : fc)),
       }));
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error("Error updating flashcard:", err);
       throw err instanceof Error ? err : new Error("Failed to update flashcard");
     }
@@ -189,6 +193,7 @@ export function useDeckDetail(
         // Refresh deck to update card count
         await refreshDeck();
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error("Error deleting flashcard:", err);
         throw err instanceof Error ? err : new Error("Failed to delete flashcard");
       }
@@ -222,6 +227,7 @@ export function useDeckDetail(
         },
       }));
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error("Error refreshing all data:", err);
       throw err instanceof Error ? err : new Error("Failed to refresh data");
     }
