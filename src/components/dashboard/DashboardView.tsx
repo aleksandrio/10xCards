@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { toast } from "sonner";
 import type { DeckDto } from "@/types";
 import { useDecks } from "@/lib/hooks/useDecks";
@@ -24,13 +24,13 @@ export function DashboardView() {
     setModalState({ type: "create" });
   };
 
-  const handleOpenRenameModal = (deck: DeckDto) => {
+  const handleOpenRenameModal = useCallback((deck: DeckDto) => {
     setModalState({ type: "rename", deck });
-  };
+  }, []);
 
-  const handleOpenDeleteDialog = (deck: DeckDto) => {
+  const handleOpenDeleteDialog = useCallback((deck: DeckDto) => {
     setModalState({ type: "delete", deck });
-  };
+  }, []);
 
   const handleCloseModal = () => {
     setModalState({ type: "none" });
