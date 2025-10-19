@@ -103,3 +103,46 @@ export const bulkCreateFlashcardsSchema = z.object({
     .min(1, "At least one flashcard must be provided")
     .max(100, "Cannot create more than 100 flashcards at once"),
 });
+
+/**
+ * Zod schema for validating user login requests.
+ */
+export const loginSchema = z.object({
+  email: z.string().trim().email("Please enter a valid email address"),
+  password: z.string().min(1, "Password is required"),
+});
+
+/**
+ * Zod schema for validating user registration requests.
+ * Passwords must be at least 8 characters and match confirmation.
+ */
+export const registerSchema = z
+  .object({
+    email: z.string().trim().email("Please enter a valid email address"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string().min(1, "Please confirm your password"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+/**
+ * Zod schema for validating password reset email requests.
+ */
+export const forgotPasswordSchema = z.object({
+  email: z.string().trim().email("Please enter a valid email address"),
+});
+
+/**
+ * Zod schema for validating password update requests.
+ */
+export const updatePasswordSchema = z
+  .object({
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string().min(1, "Please confirm your password"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });

@@ -7,6 +7,8 @@ This document outlines the recommended technology stack for the 10xCards applica
 -   **Frontend:** **Astro** with **React** islands for a fast, content-driven UI with rich interactivity.
 -   **Backend:** **Supabase** (PostgreSQL, Authentication, Real-time APIs) to handle all backend logic, user management, and data persistence.
 -   **AI Integration:** **OpenRouter.ai** for seamless access to AI models for flashcard generation.
+-   **Styling:** **Tailwind CSS** with **Shadcn/ui** components.
+-   **Testing:** **Vitest** & **React Testing Library** for unit/integration tests; **Playwright** for E2E tests.
 -   **DevOps:** **GitHub** for version control and **GitHub Actions** for CI/CD.
 
 ## Key Highlights

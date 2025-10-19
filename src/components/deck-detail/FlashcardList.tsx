@@ -36,7 +36,7 @@ export function FlashcardList({ flashcards, hasMore, onLoadMore, onEdit, onDelet
   }, [hasMore, onLoadMore]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" data-testid="flashcard-list">
       {/* Desktop table view */}
       <div className="hidden md:block rounded-lg border overflow-hidden">
         <table className="w-full">

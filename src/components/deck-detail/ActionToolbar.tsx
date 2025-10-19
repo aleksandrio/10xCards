@@ -15,7 +15,13 @@ export function ActionToolbar({ onStudy, onGenerate, onAdd, deckIsStudiable, dec
         Study This Deck
       </Button>
 
-      <Button onClick={onGenerate} disabled={deckIsFull} variant="outline" size="lg">
+      <Button
+        onClick={onGenerate}
+        disabled={deckIsFull}
+        variant="outline"
+        size="lg"
+        data-testid="generate-flashcards-button"
+      >
         Generate Flashcards
       </Button>
 

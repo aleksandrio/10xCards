@@ -12,6 +12,7 @@ export function CreateDeckButton({ onClick, disabled }: CreateDeckButtonProps) {
       disabled={disabled}
       size="default"
       title={disabled ? "Maximum deck limit reached (10/10)" : "Create a new deck"}
+      data-testid="create-deck-button"
     >
       <svg
         className="w-4 h-4 mr-2"

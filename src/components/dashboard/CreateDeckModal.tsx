@@ -45,7 +45,7 @@ export function CreateDeckModal({ isOpen, onClose, onSubmit }: CreateDeckModalPr
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent>
+      <DialogContent data-testid="create-deck-modal">
         <DialogHeader>
           <DialogTitle>Create New Deck</DialogTitle>
         </DialogHeader>
@@ -63,6 +63,7 @@ export function CreateDeckModal({ isOpen, onClose, onSubmit }: CreateDeckModalPr
                 maxLength={100}
                 autoFocus
                 disabled={isSubmitting}
+                data-testid="deck-name-input"
               />
               <div className="flex justify-between text-xs text-muted-foreground">
                 <span>
@@ -79,7 +80,7 @@ export function CreateDeckModal({ isOpen, onClose, onSubmit }: CreateDeckModalPr
             <Button type="button" variant="outline" onClick={handleClose} disabled={isSubmitting}>
               Cancel
             </Button>
-            <Button type="submit" disabled={!isValid || isSubmitting}>
+            <Button type="submit" disabled={!isValid || isSubmitting} data-testid="create-deck-submit-button">
               {isSubmitting ? "Creating..." : "Create"}
             </Button>
           </DialogFooter>

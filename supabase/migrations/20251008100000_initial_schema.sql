@@ -3,7 +3,7 @@
 --
 -- description:
 --   - sets up the initial database schema for 10xcards.
---   - creates tables for profiles, decks, flashcards, generations, and generation_errors.
+--   - creates tables for decks, flashcards, generations, and generation_errors.
 --   - establishes relationships between tables.
 --   - adds indexes for performance optimization.
 --   - implements a trigger to automatically update 'updated_at' timestamps.
@@ -19,17 +19,6 @@ create type public.flashcard_creation_type as enum ('manual', 'generated');
 
 -- section: tables
 -- description: defines the table structures for the application.
-
--- table: profiles
--- description: stores public user data, linked to supabase's auth.users table.
-create table public.profiles (
-    id uuid not null,
-    created_at timestamptz not null default now(),
-    updated_at timestamptz not null default now(),
-    primary key (id),
-    foreign key (id) references auth.users(id) on delete cascade
-);
-comment on table public.profiles is 'stores public user data, linked to supabase''s auth.users table.';
 
 -- table: decks
 -- description: stores user-created flashcard decks.
@@ -106,12 +95,6 @@ begin
 end;
 $$ language 'plpgsql';
 
--- trigger: set_updated_at_profiles
-create trigger set_updated_at_profiles
-before update on public.profiles
-for each row
-execute procedure public.update_updated_at_column();
-
 -- trigger: set_updated_at_decks
 create trigger set_updated_at_decks
 before update on public.decks
@@ -146,23 +129,10 @@ create index idx_flashcards_generation_id on public.flashcards(generation_id);
 -- description: enables row-level security and defines policies for data access control.
 
 -- enable rls for all tables
-alter table public.profiles enable row level security;
 alter table public.decks enable row level security;
 alter table public.generations enable row level security;
 alter table public.generation_errors enable row level security;
 alter table public.flashcards enable row level security;
-
--- policies for: profiles
--- description: public profiles, but only owners can modify their own.
--- select: authenticated and anonymous users can view all profiles.
-create policy "all users can view profiles" on public.profiles for select using (true);
--- insert: authenticated users can create their own profile.
-create policy "authenticated users can create their own profile" on public.profiles for insert to authenticated with check (auth.uid() = id);
--- update: authenticated users can update their own profile.
-create policy "authenticated users can update their own profile" on public.profiles for update to authenticated using (auth.uid() = id) with check (auth.uid() = id);
--- delete: no one can delete a profile directly (it happens via cascade from auth.users).
-create policy "users cannot delete profiles" on public.profiles for delete using (false);
-
 
 -- policies for: decks
 -- description: users can only manage their own decks.

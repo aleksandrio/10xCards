@@ -12,16 +12,19 @@ export function DeckCard({ deck, onRename, onDelete }: DeckCardProps) {
     <a
       href={`/decks/${deck.id}`}
       className="block rounded-lg border bg-card text-card-foreground shadow-sm transition-all hover:shadow-md hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      data-testid="deck-card"
     >
       <div className="p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-semibold truncate mb-2">{deck.name}</h3>
+            <h3 className="text-lg font-semibold truncate mb-2" data-testid="deck-card-name">
+              {deck.name}
+            </h3>
             <p className="text-sm text-muted-foreground">
               {deck.flashcardCount} {deck.flashcardCount === 1 ? "card" : "cards"}
             </p>
           </div>
-          <div className="flex-shrink-0" onClick={(e) => e.preventDefault()}>
+          <div className="flex-shrink-0">
             <DeckActionsMenu deck={deck} onRename={onRename} onDelete={onDelete} />
           </div>
         </div>

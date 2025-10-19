@@ -28,6 +28,7 @@ The project is built with a modern, scalable, and cost-effective tech stack desi
 -   **Backend & Database:** [Supabase](https://supabase.com/) (PostgreSQL, Authentication, Real-time APIs) for all backend logic, user management, and data persistence.
 -   **AI Integration:** [OpenRouter.ai](https://openrouter.ai/) for seamless access to various AI models for flashcard generation.
 -   **Styling:** [Tailwind CSS](https://tailwindcss.com/) with [Shadcn/ui](https://ui.shadcn.com/) components.
+-   **Testing:** Unit & integration tests with [Vitest](https://vitest.dev/) and [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/), and E2E tests with [Playwright](https://playwright.dev/).
 -   **DevOps:** [GitHub](https://github.com/) for version control and [GitHub Actions](https://github.com/features/actions) for CI/CD.
 
 ## Getting Started Locally

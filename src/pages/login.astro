@@ -1,0 +1,12 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { LoginForm } from "../components/auth/LoginForm";
+
+export const prerender = false;
+---
+
+<Layout title="Log In - 10xCards">
+  <div class="min-h-screen flex items-center justify-center px-4 py-12 bg-background">
+    <LoginForm client:load />
+  </div>
+</Layout>

@@ -220,7 +220,7 @@ export function GenerationModal({ isOpen, onClose, onComplete, deckId }: Generat
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-      <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto" data-testid="generation-modal">
         {/* Step 1: Input */}
         {state.step === "input" && (
           <>
@@ -238,6 +238,7 @@ export function GenerationModal({ isOpen, onClose, onComplete, deckId }: Generat
                 </label>
                 <textarea
                   id="generation-text"
+                  data-testid="generation-text-input"
                   value={state.inputText}
                   onChange={(e) => dispatch({ type: "SET_INPUT", payload: e.target.value })}
                   placeholder="Paste your notes, textbook excerpts, or any study material here..."
@@ -260,6 +261,7 @@ export function GenerationModal({ isOpen, onClose, onComplete, deckId }: Generat
                 type="button"
                 onClick={handleGenerate}
                 disabled={state.inputText.trim().length < 10 || state.inputText.length > 5000}
+                data-testid="generate-button"
               >
                 Generate Flashcards
               </Button>
@@ -397,7 +399,12 @@ export function GenerationModal({ isOpen, onClose, onComplete, deckId }: Generat
               <Button type="button" variant="outline" onClick={handleClose}>
                 Cancel
               </Button>
-              <Button type="button" onClick={handleSave} disabled={state.suggestedFlashcards.length === 0}>
+              <Button
+                type="button"
+                onClick={handleSave}
+                disabled={state.suggestedFlashcards.length === 0}
+                data-testid="add-flashcards-button"
+              >
                 Add {state.suggestedFlashcards.length} {state.suggestedFlashcards.length === 1 ? "Card" : "Cards"}
               </Button>
             </DialogFooter>

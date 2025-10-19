@@ -75,7 +75,7 @@ export class DeckService {
         name,
         created_at,
         updated_at,
-        flashcards:flashcards(count)
+        flashcards(id)
       `
       )
       .order(sortBy, { ascending: sortOrder === "asc" })
@@ -123,7 +123,7 @@ export class DeckService {
         name,
         created_at,
         updated_at,
-        flashcards:flashcards(count)
+        flashcards(id)
       `
       )
       .eq("id", deckId)
@@ -230,7 +230,7 @@ export class DeckService {
         name,
         created_at,
         updated_at,
-        flashcards:flashcards(count)
+        flashcards(id)
       `
       )
       .single();

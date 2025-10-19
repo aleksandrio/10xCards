@@ -47,14 +47,14 @@ export function FlashcardListItem({ flashcard, onEdit, onDelete, variant }: Flas
 
   // Card variant for mobile
   return (
-    <div className="rounded-lg border bg-card p-4 space-y-3">
-      <div>
-        <div className="text-xs font-medium text-muted-foreground mb-1">Front</div>
-        <div className="text-sm">{flashcard.front}</div>
-      </div>
-      <div>
-        <div className="text-xs font-medium text-muted-foreground mb-1">Back</div>
-        <div className="text-sm">{flashcard.back}</div>
+    <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-6" data-testid="flashcard-list-item">
+      <div className="flex gap-6">
+        <div className="flex-1">
+          <div className="font-medium">{flashcard.front}</div>
+        </div>
+        <div className="flex-1">
+          <div className="font-medium">{flashcard.back}</div>
+        </div>
       </div>
       <div className="flex gap-2 pt-2">
         <Button

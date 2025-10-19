@@ -9,7 +9,7 @@ interface DeckGridProps {
 
 export function DeckGrid({ decks, onRename, onDelete }: DeckGridProps) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" data-testid="deck-grid">
       {decks.map((deck) => (
         <DeckCard key={deck.id} deck={deck} onRename={onRename} onDelete={onDelete} />
       ))}
