@@ -34,4 +34,10 @@ export class DashboardPage {
     await this.createDeckButton.click();
     await this.createDeckModal.waitForModal();
   }
+
+  async clickFirstDeck() {
+    const firstDeck = this.deckGrid.grid.getByTestId("deck-card").first();
+    await firstDeck.waitFor({ state: "visible" });
+    await firstDeck.click();
+  }
 }

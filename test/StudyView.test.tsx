@@ -24,7 +24,15 @@ vi.mock("../src/components/study/StudyCard", () => ({
     isFlipped: boolean;
     onFlip: () => void;
   }) => (
-    <div data-testid="study-card" onClick={onFlip}>
+    <div
+      data-testid="study-card"
+      onClick={onFlip}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") onFlip();
+      }}
+      role="button"
+      tabIndex={0}
+    >
       {isFlipped ? backText : frontText}
     </div>
   ),
@@ -101,8 +109,10 @@ describe("StudyView component", () => {
     // Mock Math.random for consistent shuffle
     vi.spyOn(Math, "random").mockReturnValue(0.5);
     // Mock window.location
-    delete (window as any).location;
-    window.location = { href: "" } as Location;
+    Object.defineProperty(window, "location", {
+      value: { href: "" },
+      writable: true,
+    });
   });
 
   afterEach(() => {
@@ -322,4 +332,3 @@ describe("StudyView component", () => {
     });
   });
 });
-

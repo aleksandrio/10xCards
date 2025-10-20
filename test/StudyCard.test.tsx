@@ -144,4 +144,3 @@ describe("StudyCard component", () => {
     });
   });
 });
-

@@ -68,4 +68,3 @@ describe("ProgressBar component", () => {
     });
   });
 });
-

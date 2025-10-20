@@ -1,17 +1,14 @@
 import { test, expect } from "@playwright/test";
-import { LoginPage } from "./page-objects/LoginPage";
+import { LoginPage } from "../e2e/page-objects/LoginPage";
 import { DashboardPage } from "./page-objects/DashboardPage";
-import { DeckDetailPage } from "./page-objects/DeckDetailPage";
 
 test.describe("Study Mode E2E Tests", () => {
   let loginPage: LoginPage;
   let dashboardPage: DashboardPage;
-  let deckDetailPage: DeckDetailPage;
 
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
     dashboardPage = new DashboardPage(page);
-    deckDetailPage = new DeckDetailPage(page);
 
     // Login before each test
     await loginPage.goto();
@@ -144,7 +141,7 @@ test.describe("Study Mode E2E Tests", () => {
     // Act & Assert: Navigate through cards and verify progress
     for (let i = 1; i <= Math.min(3, totalCards); i++) {
       await expect(page.getByText(`Card ${i} of ${totalCards}`)).toBeVisible();
-      
+
       if (i < totalCards) {
         await page.keyboard.press("ArrowRight");
       }
@@ -165,7 +162,7 @@ test.describe("Study Mode E2E Tests", () => {
     for (let i = 1; i < totalCards; i++) {
       await page.keyboard.press("ArrowRight");
     }
-    
+
     // Go past the last card
     await page.keyboard.press("ArrowRight");
 
@@ -241,7 +238,7 @@ test.describe("Study Mode E2E Tests", () => {
     await expect(backCard).toBeVisible();
   });
 
-  test("Displays empty state when deck has no flashcards", async ({ page }) => {
+  test("Displays empty state when deck has no flashcards", async () => {
     // Note: This test requires a deck with no flashcards to exist
     // You may need to create such a deck in your test setup
 
@@ -260,9 +257,7 @@ test.describe("Study Mode E2E Tests", () => {
 
     // Assert: Keyboard hints are visible (may be hidden on mobile)
     // Check for keyboard shortcut indicators
-    const hasKeyboardHints =
-      (await page.locator("kbd").count()) > 0 || 
-      (await page.getByText(/flip/i).count()) > 0;
+    const hasKeyboardHints = (await page.locator("kbd").count()) > 0 || (await page.getByText(/flip/i).count()) > 0;
 
     expect(hasKeyboardHints).toBeTruthy();
   });
@@ -285,4 +280,3 @@ test.describe("Study Mode E2E Tests", () => {
     expect(boundingBox).toBeTruthy();
   });
 });
-

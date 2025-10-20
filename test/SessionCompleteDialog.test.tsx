@@ -18,9 +18,7 @@ describe("SessionCompleteDialog component", () => {
       render(<SessionCompleteDialog {...defaultProps} />);
 
       expect(screen.getByText("Study Session Complete!")).toBeInTheDocument();
-      expect(
-        screen.getByText(/You've reviewed all the cards in this deck/i)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/You've reviewed all the cards in this deck/i)).toBeInTheDocument();
     });
 
     it("should not render dialog when isOpen is false", () => {
@@ -81,4 +79,3 @@ describe("SessionCompleteDialog component", () => {
     });
   });
 });
-
