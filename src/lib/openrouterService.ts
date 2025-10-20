@@ -162,12 +162,12 @@ export class OpenRouterService {
       throw new ConfigurationError("PUBLIC_OPENROUTER_API_KEY environment variable is not set.");
     }
 
-    if (!import.meta.env.SITE_URL) {
-      throw new ConfigurationError("SITE_URL environment variable is not set for HTTP-Referer header.");
+    if (!import.meta.env.PUBLIC_SITE_URL) {
+      throw new ConfigurationError("PUBLIC_SITE_URL environment variable is not set for HTTP-Referer header.");
     }
 
     this.apiKey = import.meta.env.PUBLIC_OPENROUTER_API_KEY;
-    this.siteUrl = import.meta.env.SITE_URL;
+    this.siteUrl = import.meta.env.PUBLIC_SITE_URL;
   }
 
   /**

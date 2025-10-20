@@ -17,25 +17,25 @@ describe("OpenRouterService", () => {
   describe("Constructor", () => {
     it("should throw ConfigurationError if PUBLIC_OPENROUTER_API_KEY is not set", async () => {
       vi.stubEnv("PUBLIC_OPENROUTER_API_KEY", "");
-      vi.stubEnv("SITE_URL", mockSiteUrl);
+      vi.stubEnv("PUBLIC_SITE_URL", mockSiteUrl);
       vi.resetModules();
       const { OpenRouterService } = await import("@/lib/openrouterService");
       expect(() => new OpenRouterService()).toThrow("PUBLIC_OPENROUTER_API_KEY environment variable is not set.");
     });
 
-    it("should throw ConfigurationError if SITE_URL is not set", async () => {
+    it("should throw ConfigurationError if PUBLIC_SITE_URL is not set", async () => {
       vi.stubEnv("PUBLIC_OPENROUTER_API_KEY", mockApiKey);
-      vi.stubEnv("SITE_URL", "");
+      vi.stubEnv("PUBLIC_SITE_URL", "");
       vi.resetModules();
       const { OpenRouterService } = await import("@/lib/openrouterService");
       expect(() => new OpenRouterService()).toThrow(
-        "SITE_URL environment variable is not set for HTTP-Referer header."
+        "PUBLIC_SITE_URL environment variable is not set for HTTP-Referer header."
       );
     });
 
     it("should not throw an error if environment variables are set", async () => {
       vi.stubEnv("PUBLIC_OPENROUTER_API_KEY", mockApiKey);
-      vi.stubEnv("SITE_URL", mockSiteUrl);
+      vi.stubEnv("PUBLIC_SITE_URL", mockSiteUrl);
       vi.resetModules();
       const { OpenRouterService } = await import("@/lib/openrouterService");
       expect(() => new OpenRouterService()).not.toThrow();
@@ -55,7 +55,7 @@ describe("OpenRouterService", () => {
 
     beforeEach(async () => {
       vi.stubEnv("PUBLIC_OPENROUTER_API_KEY", mockApiKey);
-      vi.stubEnv("SITE_URL", mockSiteUrl);
+      vi.stubEnv("PUBLIC_SITE_URL", mockSiteUrl);
       vi.resetModules();
       const module = await import("@/lib/openrouterService");
       service = new module.OpenRouterService();
