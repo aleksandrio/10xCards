@@ -15,16 +15,16 @@ describe("OpenRouterService", () => {
   });
 
   describe("Constructor", () => {
-    it("should throw ConfigurationError if OPENROUTER_API_KEY is not set", async () => {
-      vi.stubEnv("OPENROUTER_API_KEY", "");
+    it("should throw ConfigurationError if PUBLIC_OPENROUTER_API_KEY is not set", async () => {
+      vi.stubEnv("PUBLIC_OPENROUTER_API_KEY", "");
       vi.stubEnv("SITE_URL", mockSiteUrl);
       vi.resetModules();
       const { OpenRouterService } = await import("@/lib/openrouterService");
-      expect(() => new OpenRouterService()).toThrow("OPENROUTER_API_KEY environment variable is not set.");
+      expect(() => new OpenRouterService()).toThrow("PUBLIC_OPENROUTER_API_KEY environment variable is not set.");
     });
 
     it("should throw ConfigurationError if SITE_URL is not set", async () => {
-      vi.stubEnv("OPENROUTER_API_KEY", mockApiKey);
+      vi.stubEnv("PUBLIC_OPENROUTER_API_KEY", mockApiKey);
       vi.stubEnv("SITE_URL", "");
       vi.resetModules();
       const { OpenRouterService } = await import("@/lib/openrouterService");
@@ -34,7 +34,7 @@ describe("OpenRouterService", () => {
     });
 
     it("should not throw an error if environment variables are set", async () => {
-      vi.stubEnv("OPENROUTER_API_KEY", mockApiKey);
+      vi.stubEnv("PUBLIC_OPENROUTER_API_KEY", mockApiKey);
       vi.stubEnv("SITE_URL", mockSiteUrl);
       vi.resetModules();
       const { OpenRouterService } = await import("@/lib/openrouterService");
@@ -54,7 +54,7 @@ describe("OpenRouterService", () => {
     let NetworkError: ErrorConstructor;
 
     beforeEach(async () => {
-      vi.stubEnv("OPENROUTER_API_KEY", mockApiKey);
+      vi.stubEnv("PUBLIC_OPENROUTER_API_KEY", mockApiKey);
       vi.stubEnv("SITE_URL", mockSiteUrl);
       vi.resetModules();
       const module = await import("@/lib/openrouterService");

@@ -158,15 +158,15 @@ export class OpenRouterService {
    */
   constructor() {
     // Guard clause: Check for required environment variables
-    if (!import.meta.env.OPENROUTER_API_KEY) {
-      throw new ConfigurationError("OPENROUTER_API_KEY environment variable is not set.");
+    if (!import.meta.env.PUBLIC_OPENROUTER_API_KEY) {
+      throw new ConfigurationError("PUBLIC_OPENROUTER_API_KEY environment variable is not set.");
     }
 
     if (!import.meta.env.SITE_URL) {
       throw new ConfigurationError("SITE_URL environment variable is not set for HTTP-Referer header.");
     }
 
-    this.apiKey = import.meta.env.OPENROUTER_API_KEY;
+    this.apiKey = import.meta.env.PUBLIC_OPENROUTER_API_KEY;
     this.siteUrl = import.meta.env.SITE_URL;
   }
 
