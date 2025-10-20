@@ -29,8 +29,7 @@ export function DeckDetailView({ deckId, initialDeck, initialFlashcards }: DeckD
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleStudy = () => {
-    // TODO: Navigate to study view
-    window.location.href = `/study/${deckId}`;
+    window.location.href = `/decks/${deckId}/study`;
   };
 
   const handleGenerate = () => {

@@ -1,0 +1,85 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { FlashcardService, DeckNotFoundError } from "../../../lib/flashcardService";
+import type { FlashcardDto } from "../../../types";
+import { StudyView } from "../../../components/study/StudyView";
+
+export const prerender = false;
+
+const { deckId } = Astro.params;
+
+if (!deckId) {
+  return Astro.redirect("/dashboard");
+}
+
+// Get supabase and user from locals (set by middleware)
+const supabase = Astro.locals.supabase;
+const user = Astro.locals.user;
+
+// Authentication check
+if (!user) {
+  return Astro.redirect("/");
+}
+
+// Initialize flashcard service
+const flashcardService = new FlashcardService(supabase, user.id);
+
+// Fetch all flashcards for the deck (no pagination for study mode)
+let flashcards: FlashcardDto[] = [];
+let error: string | null = null;
+
+try {
+  // Fetch all flashcards by using a large page size
+  const result = await flashcardService.getFlashcardsByDeck(deckId, {
+    page: 1,
+    pageSize: 100, // Maximum cards per deck
+  });
+
+  flashcards = result.data;
+} catch (e) {
+  // eslint-disable-next-line no-console
+  console.error("Error loading flashcards for study session:", e);
+
+  // Handle specific error types
+  if (e instanceof DeckNotFoundError) {
+    error = "Deck not found or access denied";
+  } else {
+    error = "Failed to load study session. Please try again.";
+  }
+}
+
+// If there's an error, show error page
+if (error) {
+  return Astro.redirect(`/decks/${deckId}`);
+}
+
+// If deck has no flashcards, show empty state
+const hasNoCards = flashcards.length === 0;
+---
+
+<Layout title="Study Mode - 10xCards">
+  {
+    hasNoCards ? (
+      <div class="flex min-h-screen items-center justify-center bg-background p-4">
+        <div class="w-full max-w-md space-y-6 text-center">
+          <div class="space-y-2">
+            <h1 class="text-3xl font-bold tracking-tight">No Cards to Study</h1>
+            <p class="text-muted-foreground">
+              This deck doesn't have any flashcards yet. Add some cards to start studying.
+            </p>
+          </div>
+          <div class="flex justify-center gap-4">
+            <a
+              href={`/decks/${deckId}`}
+              class="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            >
+              Return to Deck
+            </a>
+          </div>
+        </div>
+      </div>
+    ) : (
+      <StudyView client:load flashcards={flashcards} deckId={deckId} />
+    )
+  }
+</Layout>
