@@ -48,7 +48,7 @@ export function FlashcardListItem({ flashcard, onEdit, onDelete, variant }: Flas
   // Card variant for mobile
   return (
     <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-6" data-testid="flashcard-list-item">
-      <div className="flex gap-6">
+      <div className="flex">
         <div className="flex-1">
           <div className="font-medium">{flashcard.front}</div>
         </div>
